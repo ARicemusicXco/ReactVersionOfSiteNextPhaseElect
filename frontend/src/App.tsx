@@ -13,6 +13,9 @@ import SystemUpgrades from './pages/services/residential-solar/SystemUpgrades';
 import EVChargers from './pages/services/residential-solar/EVChargers';
 import Batteries from './pages/services/residential-solar/Batteries';
 import CommercialElectricProcess from './pages/services/commercial-electric/OurProcess';
+import CommercialElectricNewConstruction from './pages/services/commercial-electric/NewConstruction';
+import CommercialSolar from './pages/services/commercial-electric/Solar';
+import CommercialRemodels from './pages/services/commercial-electric/Remodels';
 
 const App: React.FC = () => {
   return (
@@ -29,6 +32,9 @@ const App: React.FC = () => {
             <Route path="/services/residential-solar/ev-chargers" element={<EVChargers />} />
             <Route path="/services/residential-solar/batteries" element={<Batteries />} />
             <Route path="/services/commercial-electric/our-process" element={<CommercialElectricProcess />} />
+            <Route path="/services/commercial-electric/new-construction" element={<CommercialElectricNewConstruction />} />
+            <Route path="/services/commercial-electric/solar" element={<CommercialSolar />} />
+            <Route path="/services/commercial-electric/remodels" element={<CommercialRemodels />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
