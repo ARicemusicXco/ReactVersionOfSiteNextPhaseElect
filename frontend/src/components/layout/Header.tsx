@@ -172,7 +172,7 @@ const DropdownSection = styled.div`
   }
 `;
 
-const DropdownSectionTitle = styled.div`
+const DropdownSectionTitle = styled(Link)`
   font-weight: 600;
   color: ${({ theme }) => theme.colors.text};
   padding: ${({ theme }) => `${theme.spacing.xs} ${theme.spacing.md}`};
@@ -181,6 +181,12 @@ const DropdownSectionTitle = styled.div`
   align-items: center;
   margin-bottom: ${({ theme }) => theme.spacing.xs};
   text-transform: uppercase;
+  text-decoration: none;
+  transition: color ${({ theme }) => theme.transitions.fast};
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.primary};
+  }
 `;
 
 const DropdownSectionIcon = styled.span`
@@ -359,32 +365,41 @@ const Header: React.FC<HeaderProps> = ({ isTransparent = false }) => {
   
   // Handle click outside to close dropdowns
   useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout>;
+    
     const handleClickOutside = (event: MouseEvent) => {
       if (
         servicesRef.current && 
         !servicesRef.current.contains(event.target as Node)
       ) {
-        setServicesOpen(false);
+        timeoutId = setTimeout(() => {
+          setServicesOpen(false);
+        }, 100);
       }
       
       if (
         resourcesRef.current && 
         !resourcesRef.current.contains(event.target as Node)
       ) {
-        setResourcesOpen(false);
+        timeoutId = setTimeout(() => {
+          setResourcesOpen(false);
+        }, 100);
       }
       
       if (
         aboutRef.current && 
         !aboutRef.current.contains(event.target as Node)
       ) {
-        setAboutOpen(false);
+        timeoutId = setTimeout(() => {
+          setAboutOpen(false);
+        }, 100);
       }
     };
     
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      clearTimeout(timeoutId);
     };
   }, []);
   
@@ -432,7 +447,7 @@ const Header: React.FC<HeaderProps> = ({ isTransparent = false }) => {
               <ServicesDropdownColumns>
                 {/* Residential Solar Column */}
                 <ServicesDropdownColumn>
-                  <DropdownSectionTitle>
+                  <DropdownSectionTitle to="/services/residential-solar">
                     <DropdownSectionIcon>
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -449,7 +464,7 @@ const Header: React.FC<HeaderProps> = ({ isTransparent = false }) => {
                 
                 {/* Commercial Electric Column */}
                 <ServicesDropdownColumn>
-                  <DropdownSectionTitle>
+                  <DropdownSectionTitle to="/services/commercial-electric">
                     <DropdownSectionIcon>
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M8 3H5C4.46957 3 3.96086 3.21071 3.58579 3.58579C3.21071 3.96086 3 4.46957 3 5V19C3 19.5304 3.21071 20.0391 3.58579 20.4142C3.96086 20.7893 4.46957 21 5 21H19C19.5304 21 20.0391 20.7893 20.4142 20.4142C20.7893 20.0391 21 19.5304 21 19V16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -519,9 +534,9 @@ const Header: React.FC<HeaderProps> = ({ isTransparent = false }) => {
             </NavLink>
             <DropdownContainer $isOpen={resourcesOpen}>
               <DropdownSection>
-                <DropdownLink to="/resources/placeholder1">Resource Placeholder 1</DropdownLink>
-                <DropdownLink to="/resources/placeholder2">Resource Placeholder 2</DropdownLink>
-                <DropdownLink to="/resources/placeholder3">Resource Placeholder 3</DropdownLink>
+                <DropdownLink to="/resources/blog">Blog</DropdownLink>
+                <DropdownLink to="/resources/financing">Financing</DropdownLink>
+                <DropdownLink to="/resources/faq">FAQ</DropdownLink>
               </DropdownSection>
             </DropdownContainer>
           </NavItem>
@@ -546,9 +561,10 @@ const Header: React.FC<HeaderProps> = ({ isTransparent = false }) => {
             </NavLink>
             <DropdownContainer $isOpen={aboutOpen}>
               <DropdownSection>
-                <DropdownLink to="/about/placeholder1">About Placeholder 1</DropdownLink>
-                <DropdownLink to="/about/placeholder2">About Placeholder 2</DropdownLink>
-                <DropdownLink to="/about/placeholder3">About Placeholder 3</DropdownLink>
+                <DropdownLink to="/about/what-sets-us-apart">What Sets Us Apart</DropdownLink>
+                <DropdownLink to="/about/partners">Partners</DropdownLink>
+                <DropdownLink to="/about/areas-we-serve">Areas We Serve</DropdownLink>
+                <DropdownLink to="/about/careers">Careers</DropdownLink>
               </DropdownSection>
             </DropdownContainer>
           </NavItem>
@@ -653,14 +669,14 @@ const Header: React.FC<HeaderProps> = ({ isTransparent = false }) => {
             Resources {mobileResourcesOpen ? '▲' : '▼'}
           </MobileNavButton>
           <MobileNavSubMenu $isOpen={mobileResourcesOpen}>
-            <MobileSubNavLink to="/resources/placeholder1" onClick={() => setMobileMenuOpen(false)}>
-              Resource Placeholder 1
+            <MobileSubNavLink to="/resources/blog" onClick={() => setMobileMenuOpen(false)}>
+              Blog
             </MobileSubNavLink>
-            <MobileSubNavLink to="/resources/placeholder2" onClick={() => setMobileMenuOpen(false)}>
-              Resource Placeholder 2
+            <MobileSubNavLink to="/resources/financing" onClick={() => setMobileMenuOpen(false)}>
+              Financing
             </MobileSubNavLink>
-            <MobileSubNavLink to="/resources/placeholder3" onClick={() => setMobileMenuOpen(false)}>
-              Resource Placeholder 3
+            <MobileSubNavLink to="/resources/faq" onClick={() => setMobileMenuOpen(false)}>
+              FAQ
             </MobileSubNavLink>
           </MobileNavSubMenu>
         </MobileNavSection>
@@ -671,14 +687,17 @@ const Header: React.FC<HeaderProps> = ({ isTransparent = false }) => {
             About Us {mobileAboutOpen ? '▲' : '▼'}
           </MobileNavButton>
           <MobileNavSubMenu $isOpen={mobileAboutOpen}>
-            <MobileSubNavLink to="/about/placeholder1" onClick={() => setMobileMenuOpen(false)}>
-              About Placeholder 1
+            <MobileSubNavLink to="/about/what-sets-us-apart" onClick={() => setMobileMenuOpen(false)}>
+              What Sets Us Apart
             </MobileSubNavLink>
-            <MobileSubNavLink to="/about/placeholder2" onClick={() => setMobileMenuOpen(false)}>
-              About Placeholder 2
+            <MobileSubNavLink to="/about/partners" onClick={() => setMobileMenuOpen(false)}>
+              Partners
             </MobileSubNavLink>
-            <MobileSubNavLink to="/about/placeholder3" onClick={() => setMobileMenuOpen(false)}>
-              About Placeholder 3
+            <MobileSubNavLink to="/about/areas-we-serve" onClick={() => setMobileMenuOpen(false)}>
+              Areas We Serve
+            </MobileSubNavLink>
+            <MobileSubNavLink to="/about/careers" onClick={() => setMobileMenuOpen(false)}>
+              Careers
             </MobileSubNavLink>
           </MobileNavSubMenu>
         </MobileNavSection>
