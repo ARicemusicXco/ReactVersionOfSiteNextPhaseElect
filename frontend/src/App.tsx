@@ -16,6 +16,9 @@ import CommercialElectricProcess from './pages/services/commercial-electric/OurP
 import CommercialElectricNewConstruction from './pages/services/commercial-electric/NewConstruction';
 import CommercialSolar from './pages/services/commercial-electric/Solar';
 import CommercialRemodels from './pages/services/commercial-electric/Remodels';
+import OilGas from './pages/services/oil-gas/OilGas';
+import Agriculture from './pages/services/agriculture/Agriculture';
+import GeneralElectric from './pages/services/general-electric/GeneralElectric';
 
 const App: React.FC = () => {
   return (
@@ -35,6 +38,9 @@ const App: React.FC = () => {
             <Route path="/services/commercial-electric/new-construction" element={<CommercialElectricNewConstruction />} />
             <Route path="/services/commercial-electric/solar" element={<CommercialSolar />} />
             <Route path="/services/commercial-electric/remodels" element={<CommercialRemodels />} />
+            <Route path="/services/oil-gas" element={<OilGas />} />
+            <Route path="/services/agriculture" element={<Agriculture />} />
+            <Route path="/services/general-electric" element={<GeneralElectric />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>
