@@ -10,16 +10,16 @@ const HeaderContainer = styled.header<HeaderContainerProps>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: ${({ theme }) => `${theme.spacing.md} ${theme.spacing.xl}`};
+  padding: ${({ theme }) => `${theme.spacing.sm} ${theme.spacing.xl}`};
   background-color: white;
   box-shadow: ${({ theme }) => theme.shadows.small};
-  position: ${({ $isTransparent }) => $isTransparent ? 'absolute' : 'sticky'};
+  position: sticky;
   top: 0;
   z-index: 100;
   width: 100%;
   
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
-    padding: ${({ theme }) => `${theme.spacing.md} ${theme.spacing.md}`};
+    padding: ${({ theme }) => `${theme.spacing.sm} ${theme.spacing.md}`};
   }
 `;
 
@@ -42,11 +42,11 @@ const LogoContainer = styled(Link)`
 `;
 
 const LogoImage = styled.img`
-  height: 60px;
+  height: 40px;
   width: auto;
   
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    height: 50px;
+    height: 35px;
   }
 `;
 
@@ -67,6 +67,8 @@ const NavItem = styled.div`
 
 interface NavLinkProps {
   $isTransparent?: boolean;
+  to?: string;
+  isButton?: boolean;
 }
 
 const NavLink = styled(({ isButton, ...props }) => 
@@ -74,7 +76,7 @@ const NavLink = styled(({ isButton, ...props }) =>
 )<NavLinkProps>`
   color: #222;
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 1rem;
   padding: ${({ theme }) => `${theme.spacing.xs} ${theme.spacing.md}`};
   border-radius: ${({ theme }) => theme.borderRadius.small};
   transition: all ${({ theme }) => theme.transitions.fast};
@@ -102,10 +104,10 @@ interface DropdownIndicatorProps {
 }
 
 const DropdownIndicator = styled.span<DropdownIndicatorProps>`
-  margin-left: ${({ theme }) => theme.spacing.xs};
   font-size: 0.7rem;
-  transition: transform ${({ theme }) => theme.transitions.fast};
-  color: #222;
+  margin-left: ${({ theme }) => theme.spacing.xs};
+  color: inherit;
+  transition: transform 0.2s ease-in-out;
   
   ${NavItem}:hover & {
     transform: rotate(180deg);

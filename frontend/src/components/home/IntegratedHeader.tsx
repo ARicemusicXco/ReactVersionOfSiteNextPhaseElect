@@ -5,20 +5,20 @@ import styled from 'styled-components';
 const FullScreenContainer = styled.div`
   position: relative;
   width: 100vw;
-  height: calc(80vh - 80px);
+  height: 80vh;
   min-height: 500px;
   overflow: hidden;
   margin: 0;
   padding: 0;
-  margin-top: 80px;
+  margin-top: 0;
   
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
-    height: calc(60vh - 80px);
-    min-height: 400px;
+    height: 60vh;
+    min-height: 450px;
   }
   
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    height: calc(50vh - 80px);
+    height: 50vh;
     min-height: 350px;
   }
 `;
@@ -52,13 +52,14 @@ const TextOverlay = styled.div`
   transform: translate(-50%, -50%);
   text-align: center;
   width: 90%;
-  max-width: 1000px;
+  max-width: 1200px;
   z-index: 2;
+  padding-top: 0;
 `;
 
 // Main headline
 const Headline = styled.h1`
-  font-size: 4.5rem;
+  font-size: 3.5rem;
   font-weight: 700;
   color: white;
   margin-bottom: ${({ theme }) => theme.spacing.md};
@@ -67,13 +68,17 @@ const Headline = styled.h1`
   line-height: 1.1;
   
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
-    font-size: 3.5rem;
+    font-size: 3rem;
+  }
+  
+  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+    font-size: 2.5rem;
   }
 `;
 
 // Subheadline
 const Subheadline = styled.p`
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   color: white;
   max-width: 800px;
   margin: 0 auto;
@@ -82,7 +87,7 @@ const Subheadline = styled.p`
   font-weight: 400;
   
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     max-width: 90%;
   }
 `;
