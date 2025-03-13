@@ -57,6 +57,19 @@ const TextOverlay = styled.div`
   padding-top: 0;
 `;
 
+interface AnimatedProps {
+  $visible: boolean;
+  $delay?: number;
+}
+
+// Animated container for text elements
+const AnimatedText = styled.div<AnimatedProps>`
+  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
+  transform: ${({ $visible }) => ($visible ? 'translateY(0)' : 'translateY(30px)')};
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  transition-delay: ${({ $delay }) => ($delay ? `${$delay}ms` : '0ms')};
+`;
+
 // Main headline
 const Headline = styled.h1`
   font-size: 3.5rem;
@@ -143,12 +156,20 @@ const IntegratedHeader: React.FC = () => {
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
   const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [textVisible, setTextVisible] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
   
   // Preload images on component mount
   useEffect(() => {
     preloadImages(carouselImages);
     setImagesLoaded(true);
+    
+    // Trigger text animation after a short delay
+    const timer = setTimeout(() => {
+      setTextVisible(true);
+    }, 500);
+    
+    return () => clearTimeout(timer);
   }, []);
   
   // Function to go to next slide
@@ -224,10 +245,14 @@ const IntegratedHeader: React.FC = () => {
         ))}
         
         <TextOverlay>
-          <Headline>Professionalism. Quality. Service.</Headline>
-          <Subheadline>
-            Next Phase Electric is revolutionizing commercial and residential energy systems across California, one project at a time.
-          </Subheadline>
+          <AnimatedText $visible={textVisible}>
+            <Headline>Professionalism. Quality. Service.</Headline>
+          </AnimatedText>
+          <AnimatedText $visible={textVisible} $delay={300}>
+            <Subheadline>
+              Next Phase Electric is revolutionizing commercial and residential energy systems across California, one project at a time.
+            </Subheadline>
+          </AnimatedText>
         </TextOverlay>
         
         <DotsContainer>

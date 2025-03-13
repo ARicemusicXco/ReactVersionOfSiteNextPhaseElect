@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import IntegratedHeader from '../components/home/IntegratedHeader';
@@ -76,6 +76,12 @@ const ServicesSection = styled(Section)`
   padding-bottom: ${({ theme }) => theme.spacing.xxl};
 `;
 
+const ServicesTitle = styled(SectionTitle)`
+  &:after {
+    display: none;
+  }
+`;
+
 const ServicesGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
@@ -98,7 +104,11 @@ const ServicesGrid = styled.div`
   }
 `;
 
-const ServiceCard = styled.div`
+interface AnimatedProps {
+  $isVisible: boolean;
+}
+
+const ServiceCard = styled.div<AnimatedProps>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -114,88 +124,63 @@ const ServiceCard = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  width: 90%;
+  width: 100%;
   margin: 0 auto;
+  opacity: ${props => (props.$isVisible ? 1 : 0)};
+  transform: ${props => (props.$isVisible ? 'translateY(0)' : 'translateY(20px)')};
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
 
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    border-color: ${({ theme }) => `${theme.colors.primary}20`};
-  }
-  
-  &:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 0;
-    background-color: ${({ theme }) => theme.colors.primary};
-    transition: height ${({ theme }) => theme.transitions.medium};
-  }
-  
-  &:hover:before {
-    height: 100%;
   }
 `;
 
 const ServiceIcon = styled.img`
-  width: 58px;
-  height: 58px;
+  width: 80px;
+  height: 80px;
   margin-bottom: ${({ theme }) => theme.spacing.md};
   object-fit: cover;
   border-radius: ${({ theme }) => theme.borderRadius.small};
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform ${({ theme }) => theme.transitions.medium};
-  
-  ${ServiceCard}:hover & {
-    transform: scale(1.05);
-  }
 `;
 
 const ServiceTitle = styled.h3`
-  font-size: calc(${({ theme }) => theme.fontSizes.large} * 0.9);
+  font-size: 1.8rem;
   margin-bottom: ${({ theme }) => theme.spacing.md};
   color: ${({ theme }) => theme.colors.text};
   font-weight: 700;
   position: relative;
   
   &:after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 0;
-    width: 36px;
-    height: 3px;
-    background-color: ${({ theme }) => theme.colors.primary};
+    display: none;
   }
 `;
 
 const ServiceDescription = styled.p`
-  color: ${({ theme }) => theme.colors.darkGray};
+  color: #222;
   margin-bottom: ${({ theme }) => theme.spacing.md};
   line-height: 1.6;
   flex-grow: 1;
-  font-size: calc(${({ theme }) => theme.fontSizes.medium} * 0.9);
+  font-size: ${({ theme }) => theme.fontSizes.medium};
 `;
 
 const ServiceLink = styled(Link)`
-  color: ${({ theme }) => theme.colors.primary};
+  color: white;
   font-weight: 600;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
   margin-top: auto;
-  padding: ${({ theme }) => `${theme.spacing.xs} ${theme.spacing.sm}`};
+  padding: ${({ theme }) => `${theme.spacing.xs} ${theme.spacing.md}`};
   border-radius: ${({ theme }) => theme.borderRadius.small};
+  background-color: ${({ theme }) => theme.colors.primary};
   transition: all ${({ theme }) => theme.transitions.fast};
   position: relative;
-  font-size: calc(${({ theme }) => theme.fontSizes.medium} * 0.9);
+  font-size: ${({ theme }) => theme.fontSizes.medium};
   
   &:hover {
-    background-color: rgba(227, 27, 35, 0.1);
+    background-color: ${({ theme }) => theme.colors.secondary};
     text-decoration: none;
-    padding-left: ${({ theme }) => theme.spacing.md};
   }
   
   &:after {
@@ -210,16 +195,65 @@ const ServiceLink = styled(Link)`
 `;
 
 const ValuesSection = styled(Section)`
-  background-color: white;
-  text-align: center;
-  background-image: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url('/NextPhaseElectMediaLibrary/AdobeStock_195146171.jpeg');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+  background-color: #000000;
+  text-align: left;
+  color: white;
+  padding: ${({ theme }) => `${theme.spacing.xl} ${theme.spacing.xl}`};
+`;
+
+const ValuesSectionTitle = styled.h2`
+  font-size: 2.5rem;
+  color: white;
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  font-weight: 700;
+  position: relative;
+  text-align: left;
+`;
+
+const ValuesText = styled.p`
+  font-size: 1rem;
+  color: white;
+  max-width: 800px;
+  line-height: 1.6;
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+`;
+
+const HighlightedText = styled.span`
+  color: ${({ theme }) => theme.colors.primary};
+`;
+
+const LearnMoreButton = styled(Link)`
+  display: inline-block;
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  padding: ${({ theme }) => `${theme.spacing.xs} ${theme.spacing.lg}`};
+  border-radius: ${({ theme }) => theme.borderRadius.small};
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+  
+  &:hover {
+    background-color: #c01820;
+    text-decoration: none;
+  }
 `;
 
 const ContactFormSection = styled(Section)`
-  background-color: #f5f5f5;
+  background-color: #000000;
+  color: white;
+  text-align: left;
+  padding: ${({ theme }) => `${theme.spacing.xl} ${theme.spacing.xl}`};
+`;
+
+const QuoteTitle = styled.h2`
+  font-size: 2.5rem;
+  color: white;
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
+  font-weight: 700;
+  position: relative;
+  text-align: left;
 `;
 
 const Form = styled.form`
@@ -230,8 +264,8 @@ const Form = styled.form`
   margin: 0 auto;
   background-color: white;
   padding: ${({ theme }) => theme.spacing.xl};
-  border-radius: ${({ theme }) => theme.borderRadius.medium};
-  box-shadow: ${({ theme }) => theme.shadows.small};
+  border-radius: ${({ theme }) => theme.borderRadius.small};
+  box-shadow: ${({ theme }) => theme.shadows.medium};
 `;
 
 const FormRow = styled.div`
@@ -274,6 +308,7 @@ const CheckboxGroup = styled.div`
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing.sm};
   margin-top: ${({ theme }) => theme.spacing.sm};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
 `;
 
 const CheckboxLabel = styled.label`
@@ -281,18 +316,133 @@ const CheckboxLabel = styled.label`
   align-items: center;
   gap: ${({ theme }) => theme.spacing.sm};
   cursor: pointer;
+  color: #333;
+  font-size: 1rem;
 `;
 
 const Checkbox = styled.input`
   cursor: pointer;
+  width: 18px;
+  height: 18px;
+  margin-right: ${({ theme }) => theme.spacing.xs};
 `;
 
 const SubmitButton = styled(Button)`
-  align-self: flex-start;
-  margin-top: ${({ theme }) => theme.spacing.sm};
+  align-self: center;
+  margin-top: ${({ theme }) => theme.spacing.md};
+  background-color: ${({ theme }) => theme.colors.primary};
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+  padding: ${({ theme }) => `${theme.spacing.xs} ${theme.spacing.xl}`};
+  width: auto;
+  min-width: 120px;
+  
+  &:hover {
+    background-color: #c01820;
+  }
+`;
+
+const RequiredFieldNote = styled.p`
+  font-size: 0.8rem;
+  color: #666;
+  margin-bottom: ${({ theme }) => theme.spacing.md};
 `;
 
 const Home: React.FC = () => {
+  const [visibleCards, setVisibleCards] = useState<boolean[]>([false, false, false, false, false]);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [formSubmitting, setFormSubmitting] = useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    const observerOptions = {
+      root: null, // use viewport
+      rootMargin: '0px',
+      threshold: 0.1 // trigger when 10% of the element is visible
+    };
+
+    const observerCallback = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const index = cardRefs.current.findIndex(ref => ref === entry.target);
+          if (index !== -1) {
+            // Add a slight delay for each card for a cascade effect
+            setTimeout(() => {
+              setVisibleCards(prev => {
+                const newState = [...prev];
+                newState[index] = true;
+                return newState;
+              });
+            }, index * 100);
+            
+            // Once the animation is triggered, we can stop observing this element
+            observer.unobserve(entry.target);
+          }
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+    
+    // Observe all card refs that exist
+    cardRefs.current.forEach(ref => {
+      if (ref) observer.observe(ref);
+    });
+
+    return () => {
+      // Clean up the observer when component unmounts
+      observer.disconnect();
+    };
+  }, []);
+
+  // Function to set refs for each card
+  const setCardRef = (element: HTMLDivElement | null, index: number) => {
+    cardRefs.current[index] = element;
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setFormSubmitting(true);
+    
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const formValues: Record<string, string> = {};
+    
+    // Convert FormData to object
+    formData.forEach((value, key) => {
+      if (typeof value === 'string') {
+        formValues[key] = value;
+      }
+    });
+    
+    // Get selected interests
+    const interests = formData.getAll('interests');
+    formValues.interests = interests.join(', ');
+    
+    try {
+      // In a real implementation, you would send this data to a server endpoint
+      // that would handle the email sending to arice@xco.energy
+      console.log('Form data to be sent to arice@xco.energy:', formValues);
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Safely reset the form
+      if (formRef.current) {
+        formRef.current.reset();
+      }
+      
+      setFormSubmitted(true);
+      setTimeout(() => setFormSubmitted(false), 5000);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    } finally {
+      setFormSubmitting(false);
+    }
+  };
+
   return (
     <HomeContainer>
       <IntegratedHeader />
@@ -305,9 +455,12 @@ const Home: React.FC = () => {
       </IntroSection>
 
       <ServicesSection>
-        <SectionTitle>Explore Our Services</SectionTitle>
+        <ServicesTitle>Explore Our Services</ServicesTitle>
         <ServicesGrid>
-          <ServiceCard>
+          <ServiceCard 
+            ref={(el) => setCardRef(el, 0)} 
+            $isVisible={visibleCards[0]}
+          >
             <ServiceIcon src="/NextPhaseElectMediaLibrary/AdobeStock_197235973.jpeg" alt="Home Energy" />
             <ServiceTitle>Home Energy</ServiceTitle>
             <ServiceDescription>
@@ -316,7 +469,10 @@ const Home: React.FC = () => {
             <ServiceLink to="/services/home-energy">Learn More</ServiceLink>
           </ServiceCard>
 
-          <ServiceCard>
+          <ServiceCard 
+            ref={(el) => setCardRef(el, 1)} 
+            $isVisible={visibleCards[1]}
+          >
             <ServiceIcon src="/NextPhaseElectMediaLibrary/AdobeStock_164972173.jpeg" alt="Commercial Electric" />
             <ServiceTitle>Commercial Electric</ServiceTitle>
             <ServiceDescription>
@@ -325,7 +481,10 @@ const Home: React.FC = () => {
             <ServiceLink to="/services/commercial-electric">Learn More</ServiceLink>
           </ServiceCard>
 
-          <ServiceCard>
+          <ServiceCard 
+            ref={(el) => setCardRef(el, 2)} 
+            $isVisible={visibleCards[2]}
+          >
             <ServiceIcon src="/NextPhaseElectMediaLibrary/AdobeStock_214337983.jpeg" alt="Oil & Gas" />
             <ServiceTitle>Oil & Gas</ServiceTitle>
             <ServiceDescription>
@@ -334,7 +493,10 @@ const Home: React.FC = () => {
             <ServiceLink to="/services/oil-gas">Learn More</ServiceLink>
           </ServiceCard>
 
-          <ServiceCard>
+          <ServiceCard 
+            ref={(el) => setCardRef(el, 3)} 
+            $isVisible={visibleCards[3]}
+          >
             <ServiceIcon src="/NextPhaseElectMediaLibrary/AdobeStock_216576096.jpeg" alt="Agricultural" />
             <ServiceTitle>Agricultural</ServiceTitle>
             <ServiceDescription>
@@ -343,7 +505,10 @@ const Home: React.FC = () => {
             <ServiceLink to="/services/agricultural">Learn More</ServiceLink>
           </ServiceCard>
 
-          <ServiceCard>
+          <ServiceCard 
+            ref={(el) => setCardRef(el, 4)} 
+            $isVisible={visibleCards[4]}
+          >
             <ServiceIcon src="/NextPhaseElectMediaLibrary/AdobeStock_210408987.jpeg" alt="General Electric" />
             <ServiceTitle>General Electric</ServiceTitle>
             <ServiceDescription>
@@ -355,16 +520,17 @@ const Home: React.FC = () => {
       </ServicesSection>
 
       <ValuesSection>
-        <SectionTitle>Integrity, Quality, and a Commitment to Satisfaction</SectionTitle>
-        <IntroText>
-          Next Phase Electric is founded on principles of integrity, quality, and an unwavering commitment to customer satisfaction. We prioritize delivering not just projects, but optimal solutions for our clients. Our transparent communication and dedication to honesty set us apart in the industry.
-        </IntroText>
-        <Button as={Link} to="/about" style={{ marginTop: '2rem' }}>Learn More</Button>
+        <ValuesSectionTitle>Integrity, Quality, and a Commitment to Satisfaction</ValuesSectionTitle>
+        <ValuesText>
+          Next Phase Electric is <HighlightedText>founded on principles of integrity, quality, and an unwavering commitment to customer satisfaction</HighlightedText>. We prioritize delivering not just projects, but optimal solutions for our clients. Our transparent communication and dedication to honesty set us apart in the industry.
+        </ValuesText>
+        <LearnMoreButton to="/about">LEARN MORE</LearnMoreButton>
       </ValuesSection>
 
       <ContactFormSection>
-        <SectionTitle>Get a No Obligation Quote</SectionTitle>
-        <Form>
+        <QuoteTitle>Get a No Obligation Quote</QuoteTitle>
+        <Form ref={formRef} onSubmit={handleFormSubmit}>
+          <RequiredFieldNote>"*" indicates required fields</RequiredFieldNote>
           <FormRow>
             <FormGroup>
               <Label htmlFor="firstName">First Name*</Label>
@@ -406,7 +572,15 @@ const Home: React.FC = () => {
               </CheckboxLabel>
             </CheckboxGroup>
           </FormGroup>
-          <SubmitButton type="submit">Submit</SubmitButton>
+          <SubmitButton type="submit" disabled={formSubmitting}>
+            {formSubmitting ? 'Submitting...' : formSubmitted ? 'Submitted!' : 'SUBMIT'}
+          </SubmitButton>
+          {formSubmitted && (
+            <p style={{ color: 'green', marginTop: '1rem', textAlign: 'center' }}>
+              Thank you for your submission! We'll be in touch soon.
+            </p>
+          )}
+          <input type="hidden" name="recipient" value="arice@xco.energy" />
         </Form>
       </ContactFormSection>
     </HomeContainer>
