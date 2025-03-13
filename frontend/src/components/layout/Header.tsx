@@ -361,47 +361,93 @@ const Header: React.FC<HeaderProps> = ({ isTransparent = false }) => {
   const aboutRef = useRef<HTMLDivElement>(null);
   const contactRef = useRef<HTMLDivElement>(null);
 
+  // Timeout refs to track and clear dropdown close timers
+  const servicesTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const resourcesTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const aboutTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
   
+  // Handle services dropdown
+  const handleServicesMouseEnter = () => {
+    if (servicesTimeoutRef.current) {
+      clearTimeout(servicesTimeoutRef.current);
+      servicesTimeoutRef.current = null;
+    }
+    setServicesOpen(true);
+  };
+  
+  const handleServicesMouseLeave = () => {
+    servicesTimeoutRef.current = setTimeout(() => {
+      setServicesOpen(false);
+    }, 300); // 300ms delay before closing
+  };
+  
+  // Handle resources dropdown
+  const handleResourcesMouseEnter = () => {
+    if (resourcesTimeoutRef.current) {
+      clearTimeout(resourcesTimeoutRef.current);
+      resourcesTimeoutRef.current = null;
+    }
+    setResourcesOpen(true);
+  };
+  
+  const handleResourcesMouseLeave = () => {
+    resourcesTimeoutRef.current = setTimeout(() => {
+      setResourcesOpen(false);
+    }, 300); // 300ms delay before closing
+  };
+  
+  // Handle about dropdown
+  const handleAboutMouseEnter = () => {
+    if (aboutTimeoutRef.current) {
+      clearTimeout(aboutTimeoutRef.current);
+      aboutTimeoutRef.current = null;
+    }
+    setAboutOpen(true);
+  };
+  
+  const handleAboutMouseLeave = () => {
+    aboutTimeoutRef.current = setTimeout(() => {
+      setAboutOpen(false);
+    }, 300); // 300ms delay before closing
+  };
+  
   // Handle click outside to close dropdowns
   useEffect(() => {
-    let timeoutId: ReturnType<typeof setTimeout>;
-    
     const handleClickOutside = (event: MouseEvent) => {
       if (
         servicesRef.current && 
         !servicesRef.current.contains(event.target as Node)
       ) {
-        timeoutId = setTimeout(() => {
-          setServicesOpen(false);
-        }, 100);
+        setServicesOpen(false);
       }
       
       if (
         resourcesRef.current && 
         !resourcesRef.current.contains(event.target as Node)
       ) {
-        timeoutId = setTimeout(() => {
-          setResourcesOpen(false);
-        }, 100);
+        setResourcesOpen(false);
       }
       
       if (
         aboutRef.current && 
         !aboutRef.current.contains(event.target as Node)
       ) {
-        timeoutId = setTimeout(() => {
-          setAboutOpen(false);
-        }, 100);
+        setAboutOpen(false);
       }
     };
     
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
-      clearTimeout(timeoutId);
+      
+      // Clear any existing timeouts on unmount
+      if (servicesTimeoutRef.current) clearTimeout(servicesTimeoutRef.current);
+      if (resourcesTimeoutRef.current) clearTimeout(resourcesTimeoutRef.current);
+      if (aboutTimeoutRef.current) clearTimeout(aboutTimeoutRef.current);
     };
   }, []);
   
@@ -430,8 +476,8 @@ const Header: React.FC<HeaderProps> = ({ isTransparent = false }) => {
           {/* Services Dropdown */}
           <NavItem 
             ref={servicesRef}
-            onMouseEnter={() => setServicesOpen(true)}
-            onMouseLeave={() => setServicesOpen(false)}
+            onMouseEnter={handleServicesMouseEnter}
+            onMouseLeave={handleServicesMouseLeave}
           >
             <NavLink 
               isButton={true}
@@ -445,7 +491,11 @@ const Header: React.FC<HeaderProps> = ({ isTransparent = false }) => {
               Services
               <DropdownIndicator $isTransparent={isTransparent}>▼</DropdownIndicator>
             </NavLink>
-            <ServicesDropdownContainer $isOpen={servicesOpen}>
+            <ServicesDropdownContainer 
+              $isOpen={servicesOpen}
+              onMouseEnter={handleServicesMouseEnter}
+              onMouseLeave={handleServicesMouseLeave}
+            >
               <ServicesDropdownColumns>
                 {/* Residential Solar Column */}
                 <ServicesDropdownColumn>
@@ -519,8 +569,8 @@ const Header: React.FC<HeaderProps> = ({ isTransparent = false }) => {
           {/* Resources Dropdown */}
           <NavItem 
             ref={resourcesRef}
-            onMouseEnter={() => setResourcesOpen(true)}
-            onMouseLeave={() => setResourcesOpen(false)}
+            onMouseEnter={handleResourcesMouseEnter}
+            onMouseLeave={handleResourcesMouseLeave}
           >
             <NavLink 
               isButton={true}
@@ -534,7 +584,11 @@ const Header: React.FC<HeaderProps> = ({ isTransparent = false }) => {
               Resources
               <DropdownIndicator $isTransparent={isTransparent}>▼</DropdownIndicator>
             </NavLink>
-            <DropdownContainer $isOpen={resourcesOpen}>
+            <DropdownContainer 
+              $isOpen={resourcesOpen}
+              onMouseEnter={handleResourcesMouseEnter}
+              onMouseLeave={handleResourcesMouseLeave}
+            >
               <DropdownSection>
                 <DropdownLink to="/resources/blog">Blog</DropdownLink>
                 <DropdownLink to="/resources/financing">Financing</DropdownLink>
@@ -546,8 +600,8 @@ const Header: React.FC<HeaderProps> = ({ isTransparent = false }) => {
           {/* About Us Dropdown */}
           <NavItem 
             ref={aboutRef}
-            onMouseEnter={() => setAboutOpen(true)}
-            onMouseLeave={() => setAboutOpen(false)}
+            onMouseEnter={handleAboutMouseEnter}
+            onMouseLeave={handleAboutMouseLeave}
           >
             <NavLink 
               isButton={true}
@@ -561,7 +615,11 @@ const Header: React.FC<HeaderProps> = ({ isTransparent = false }) => {
               About Us
               <DropdownIndicator $isTransparent={isTransparent}>▼</DropdownIndicator>
             </NavLink>
-            <DropdownContainer $isOpen={aboutOpen}>
+            <DropdownContainer 
+              $isOpen={aboutOpen}
+              onMouseEnter={handleAboutMouseEnter}
+              onMouseLeave={handleAboutMouseLeave}
+            >
               <DropdownSection>
                 <DropdownLink to="/about/what-sets-us-apart">What Sets Us Apart</DropdownLink>
                 <DropdownLink to="/about/partners">Partners</DropdownLink>
