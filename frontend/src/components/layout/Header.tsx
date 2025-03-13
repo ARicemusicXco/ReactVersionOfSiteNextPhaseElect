@@ -592,7 +592,8 @@ const Header: React.FC<HeaderProps> = ({ isTransparent = false }) => {
           </MobileNavButton>
           <MobileNavSubMenu $isOpen={mobileServicesOpen}>
             {/* Residential Solar */}
-            <MobileNavButton 
+            <MobileSubNavLink 
+              to="/services/residential-solar" 
               onClick={() => setMobileMenuOpen(false)}
               style={{ paddingLeft: '2rem', fontWeight: 'bold' }}
             >
@@ -601,7 +602,7 @@ const Header: React.FC<HeaderProps> = ({ isTransparent = false }) => {
                 <path d="M9 22V12H15V22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
               Residential Solar
-            </MobileNavButton>
+            </MobileSubNavLink>
             <MobileSubNavLink to="/services/residential-solar/our-process" onClick={() => setMobileMenuOpen(false)}>
               Our Process
             </MobileSubNavLink>
@@ -616,7 +617,8 @@ const Header: React.FC<HeaderProps> = ({ isTransparent = false }) => {
             </MobileSubNavLink>
             
             {/* Commercial Electric */}
-            <MobileNavButton 
+            <MobileSubNavLink 
+              to="/services/commercial-electric" 
               onClick={() => setMobileMenuOpen(false)}
               style={{ paddingLeft: '2rem', fontWeight: 'bold' }}
             >
@@ -626,7 +628,7 @@ const Header: React.FC<HeaderProps> = ({ isTransparent = false }) => {
                 <path d="M21 3L11 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
               Commercial Electric
-            </MobileNavButton>
+            </MobileSubNavLink>
             <MobileSubNavLink to="/services/commercial-electric/our-process" onClick={() => setMobileMenuOpen(false)}>
               Our Process
             </MobileSubNavLink>
