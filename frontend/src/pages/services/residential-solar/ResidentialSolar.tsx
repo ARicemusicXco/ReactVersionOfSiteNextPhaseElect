@@ -305,7 +305,7 @@ const SolarPlanContainer = styled.div`
   
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
     flex-direction: column;
-    text-align: center;
+  text-align: center;
   }
 `;
 
