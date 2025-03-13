@@ -10,6 +10,7 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import NotFound from './pages/NotFound';
+import DynamicPage from './pages/DynamicPage';
 
 // Service Pages
 import ResidentialSolar from './pages/services/residential-solar/ResidentialSolar';
@@ -30,6 +31,7 @@ import GeneralElectric from './pages/services/general-electric/GeneralElectric';
 import Blog from './pages/resources/blog';
 import Financing from './pages/resources/financing';
 import FAQ from './pages/resources/faq';
+import BatteryBackupLocations from './pages/resources/battery-backup-locations';
 
 // About Pages
 import WhatSetsUsApart from './pages/about/what-sets-us-apart';
@@ -68,12 +70,16 @@ const App: React.FC = () => {
             <Route path="/resources/blog" element={<Blog />} />
             <Route path="/resources/financing" element={<Financing />} />
             <Route path="/resources/faq" element={<FAQ />} />
+            <Route path="/resources/battery-backup-locations" element={<BatteryBackupLocations />} />
             
             {/* About Routes */}
             <Route path="/about/what-sets-us-apart" element={<WhatSetsUsApart />} />
             <Route path="/about/partners" element={<Partners />} />
             <Route path="/about/areas-we-serve" element={<AreasWeServe />} />
             <Route path="/about/careers" element={<Careers />} />
+            
+            {/* Dynamic SEO Pages */}
+            <Route path="/:slug" element={<DynamicPage />} />
             
             {/* 404 Route */}
             <Route path="*" element={<NotFound />} />
