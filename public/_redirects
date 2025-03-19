@@ -1,0 +1,4 @@
+# Handle missing NextPhaseElectMediaLibrary files
+/NextPhaseElectMediaLibrary/*  /media/:splat  200
+# Fallback route for SPA
+/*    /index.html   200 
