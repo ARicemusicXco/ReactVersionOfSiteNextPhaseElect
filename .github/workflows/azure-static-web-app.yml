@@ -28,6 +28,17 @@ jobs:
           
       - name: Install dependencies
         run: npm ci
+        
+      - name: Create media assets symlink or copy
+        run: |
+          mkdir -p ./public/media
+          cp -r ./NextPhaseElectMediaLibrary/* ./public/media/
+          echo "Copied media assets to public directory"
+        
+      - name: Build project without TypeScript checks
+        run: npm run build
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
       
       - name: Build And Deploy
         id: builddeploy
@@ -40,6 +51,8 @@ jobs:
           app_location: "/" # App source code path
           api_location: "" # No API functions
           output_location: "dist" # Output for Vite React apps
+          skip_app_build: true # Skip the build since we're building manually
+          skip_api_build: true # Skip API build since there's no API
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
