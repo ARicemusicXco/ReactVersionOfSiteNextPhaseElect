@@ -29,13 +29,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
         
-      - name: Create media assets symlink or copy
-        run: |
-          mkdir -p ./public/media
-          cp -r ./NextPhaseElectMediaLibrary/* ./public/media/
-          echo "Copied media assets to public directory"
-        
-      - name: Build project without TypeScript checks
+      - name: Clean up media library
+        run: node cleanup-media-for-deployment.js
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
+      
+      - name: Build project
         run: npm run build
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
