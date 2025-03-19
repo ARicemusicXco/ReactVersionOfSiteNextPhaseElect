@@ -29,10 +29,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
       
-      - name: Create deployment ignore file
+      - name: Remove media directory
         run: |
-          echo "NextPhaseElectMediaLibrary" > .deployment_ignore
-          echo "Created .deployment_ignore file to exclude media directory from deployment"
+          rm -rf ./NextPhaseElectMediaLibrary
+          echo "Removed media directory to reduce deployment size"
         
       - name: Build project
         run: npm run build
@@ -47,9 +47,9 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
           action: "upload"
           ###### Repository/Build Configurations ######
-          app_location: "/" # App source code path
+          app_location: "dist" # Changed to directly use the built dist directory
           api_location: "" # No API functions
-          output_location: "dist" # Output for Vite React apps
+          output_location: "" # Empty since we're directly using dist
           skip_app_build: true # Skip the build since we're building manually
           skip_api_build: true # Skip API build since there's no API
           ###### End of Repository/Build Configurations ######
