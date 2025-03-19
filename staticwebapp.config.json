@@ -1,6 +1,11 @@
 {
   "routes": [
     {
+      "route": "/NextPhaseElectMediaLibrary/*",
+      "serve": "/assets/placeholder.svg",
+      "statusCode": 200
+    },
+    {
       "route": "/*",
       "serve": "/index.html",
       "statusCode": 200
@@ -8,7 +13,7 @@
   ],
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/images/*.{png,jpg,gif,webp}", "/css/*", "/js/*", "/*.ico", "/*.json"]
+    "exclude": ["/images/*.{png,jpg,gif,webp}", "/css/*", "/js/*", "/*.ico", "/*.json", "/assets/*"]
   },
   "globalHeaders": {
     "content-security-policy": "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; connect-src 'self' https:; font-src 'self'; object-src 'none'; media-src 'self'; frame-src 'self';"

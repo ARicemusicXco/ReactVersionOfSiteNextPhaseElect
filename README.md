@@ -10,11 +10,22 @@ A modern React application with a responsive layout and clean design.
 - Clean and modular component structure
 - ESLint and Prettier for code quality
 
+## Media Management
+
+This project uses a dedicated `NextPhaseElectMediaLibrary` directory for storing media files. However, to optimize deployment:
+
+- Media files are excluded from Git using the `.gitignore` file
+- During deployment, media files are excluded using `.deployment_ignore`
+- A placeholder SVG image is served for any missing media references
+- For production, you will need to selectively include essential media files
+
 ## Project Structure
 
 ```
 frontend/
 ├── public/             # Static files
+│   └── assets/         # Public assets including placeholder images
+├── NextPhaseElectMediaLibrary/ # Media files (excluded from deployment)
 ├── src/
 │   ├── assets/         # Images, fonts, etc.
 │   ├── components/     # Reusable components
@@ -95,6 +106,18 @@ The project uses styled-components for styling. The theme configuration is locat
 
 1. Create a new page component in the `src/pages` directory
 2. Add a new route in `src/App.tsx`
+
+## Deployment
+
+This project is configured for deployment to Azure Static Web Apps. The deployment process:
+
+1. Excludes the media library directory to keep deployment size small
+2. Uses a placeholder image for any missing media references
+3. Configures routes in `staticwebapp.config.json` to handle media requests appropriately
+
+For production deployment, you'll need to:
+1. Update the `.gitignore` to selectively include essential media files
+2. Modify the GitHub workflow to copy needed media files to the deployment directory
 
 ## License
 

@@ -28,54 +28,16 @@ jobs:
           
       - name: Install dependencies
         run: npm ci
+      
+      - name: Create deployment ignore file
+        run: |
+          echo "NextPhaseElectMediaLibrary" > .deployment_ignore
+          echo "Created .deployment_ignore file to exclude media directory from deployment"
         
-      - name: Create output directories
-        run: |
-          mkdir -p ./public/media
-          mkdir -p ./dist/media
-      
-      - name: Copy essential media files to public directory
-        run: |
-          # Create a list of essential files to copy
-          ESSENTIAL_FILES=(
-            "*logo*.png" "*Logo*.png" "favicon*.png" "*favicon*.png" 
-            "SiteLogoInTitle.png" "NextPhase-logo-*.png" 
-            "Theme-1-*.png" "Theme-1-*.svg"
-            "TeamImage1.jpg" "TeamImage2.jpg" "TeamImage3.jpg" 
-            "TeamImage5.jpg" "TeamImage6.jpg" "TeamImage7.jpg" 
-            "TeamImage8.jpg" "TeamImage9.jpg" "TeamImage18.jpg" "TeamImage20.jpg"
-            "AdobeStock_164972173.jpeg" "AdobeStock_187018505.jpeg" 
-            "AdobeStock_197235973.jpeg" "AdobeStock_210408987.jpeg" 
-            "AdobeStock_212443355.jpeg" "AdobeStock_214337983.jpeg" 
-            "AdobeStock_216576096.jpeg" 
-            "Solar-panels-on-a-corrugated-metal-roof-reflecting-sunlight.jpg"
-            "Tesla.png" "brickwall.svg"
-          )
-          
-          # Create media directory in public
-          mkdir -p ./public/media
-          
-          # Copy each file group
-          for pattern in "${ESSENTIAL_FILES[@]}"; do
-            find ./NextPhaseElectMediaLibrary -name "$pattern" -type f -exec cp {} ./public/media/ \; || true
-          done
-          
-          echo "Copied essential media files to public directory"
-      
       - name: Build project
         run: npm run build
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
-      
-      - name: Copy media files to dist directory
-        run: |
-          # Create media directory in dist
-          mkdir -p ./dist/media
-          
-          # Copy media files from public to dist
-          cp -r ./public/media/* ./dist/media/ || true
-          
-          echo "Copied media files to dist directory"
       
       - name: Build And Deploy
         id: builddeploy
