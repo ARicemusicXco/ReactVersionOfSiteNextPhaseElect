@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { validateFormField, sanitizeString } from '../utils/securityUtils';
+import { sendFormDataToEmail } from '../services/emailService';
 
 const ContactContainer = styled.div`
   display: flex;
@@ -340,7 +341,7 @@ const Contact: React.FC = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Validate all fields before submitting
@@ -380,22 +381,34 @@ const Contact: React.FC = () => {
     // Store current time for rate limiting
     localStorage.setItem('lastSubmitTime', currentTime.toString());
     
-    // Normally, you would send this to an API endpoint
-    console.log('Submitting form with sanitized data:', sanitizedData);
-    
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      // Send the form data to the specified email
+      const result = await sendFormDataToEmail(sanitizedData);
+      
+      if (result.success) {
+        setIsSubmitting(false);
+        setIsSubmitted(true);
+        setFormData({
+          firstName: '',
+          lastName: '',
+          phone: '',
+          email: '',
+          zipCode: '',
+          interests: [],
+        });
+      } else {
+        setIsSubmitting(false);
+        setErrors({
+          email: result.message
+        });
+      }
+    } catch (error) {
+      console.error('Error sending form data:', error);
       setIsSubmitting(false);
-      setIsSubmitted(true);
-      setFormData({
-        firstName: '',
-        lastName: '',
-        phone: '',
-        email: '',
-        zipCode: '',
-        interests: [],
+      setErrors({
+        email: 'Failed to send form data. Please try again later.'
       });
-    }, 1500);
+    }
   };
 
   return (

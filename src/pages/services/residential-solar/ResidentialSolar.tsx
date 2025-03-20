@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import ContactForm from '../../../components/forms/ContactForm';
+import ServiceContactForm from '../../../components/ServiceContactForm';
+import { FormData as EmailFormData } from '../../../services/emailService';
 
 // Hero Section Styles
 const HeroSection = styled.div`
@@ -192,9 +193,17 @@ const SectionContent = styled.div`
 // Feature Box Styles
 const FeatureBoxContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: ${({ theme }) => theme.spacing.lg};
   margin-top: ${({ theme }) => theme.spacing.xl};
+  
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const FeatureBox = styled.div<{ $visible: boolean }>`
@@ -504,74 +513,6 @@ const EstimateText = styled.p`
   margin-right: auto;
 `;
 
-const EstimateForm = styled.form`
-  max-width: 800px;
-  margin: 0 auto;
-`;
-
-const FormRow = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: ${({ theme }) => theme.spacing.md};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
-`;
-
-const FormField = styled.div`
-  position: relative;
-`;
-
-const FormInput = styled.input`
-  width: 100%;
-  padding: ${({ theme }) => theme.spacing.sm};
-  border: 1px solid #ddd;
-  background: white;
-  font-size: 1rem;
-  
-  &:focus {
-    outline: none;
-    border-color: ${({ theme }) => theme.colors.primary};
-  }
-`;
-
-const FormLabel = styled.label`
-  display: block;
-  margin-bottom: ${({ theme }) => theme.spacing.xs};
-  color: #555;
-  font-size: 0.9rem;
-`;
-
-const CheckboxGroup = styled.div`
-  display: flex;
-  gap: ${({ theme }) => theme.spacing.md};
-  justify-content: center;
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
-`;
-
-const CheckboxLabel = styled.label`
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.xs};
-  cursor: pointer;
-  color: #555;
-`;
-
-const SubmitButton = styled.button`
-  background-color: #e74c3c;
-  color: white;
-  border: none;
-  padding: ${({ theme }) => `${theme.spacing.sm} ${theme.spacing.xl}`};
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: background-color ${({ theme }) => theme.transitions.fast};
-  
-  &:hover {
-    background-color: #c0392b;
-  }
-`;
-
 const ResidentialSolar: React.FC = () => {
   const [elementsVisible, setElementsVisible] = useState(false);
   const [cardsVisible, setCardsVisible] = useState([false, false, false, false]);
@@ -708,11 +649,6 @@ const ResidentialSolar: React.FC = () => {
       }
     };
   }, []);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle form submission
-  };
 
   return (
     <>
@@ -866,10 +802,9 @@ const ResidentialSolar: React.FC = () => {
             <EstimateText>
               Ready to take the next step toward energy efficiency and quality electrical solutions? Contact us for a free estimate, and let's light up the path to a brighter, more cost-effective future together.
             </EstimateText>
-            <ContactForm 
-              onSubmit={(formData) => {
+            <ServiceContactForm 
+              onSubmit={(formData: EmailFormData) => {
                 console.log('Form submitted:', formData);
-                // Add your form submission logic here
               }}
             />
           </EstimateContent>

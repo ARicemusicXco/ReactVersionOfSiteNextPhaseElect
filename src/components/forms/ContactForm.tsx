@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { sendFormDataToEmail, FormData as EmailFormData } from '../../services/emailService';
 
 const FormContainer = styled.div`
   background-color: white;
@@ -10,7 +11,7 @@ const FormContainer = styled.div`
 
 const RequiredText = styled.p`
   font-size: ${({ theme }) => theme.fontSizes.small};
-  color: ${({ theme }) => theme.colors.darkGray};
+  color: ${({ theme }) => theme.colors.text};
   margin-bottom: ${({ theme }) => theme.spacing.md};
 `;
 
@@ -61,6 +62,7 @@ const CheckboxLabel = styled.label`
   align-items: center;
   gap: ${({ theme }) => theme.spacing.xs};
   cursor: pointer;
+  color: ${({ theme }) => theme.colors.text};
 `;
 
 const CheckboxInput = styled.input`
@@ -87,6 +89,15 @@ const SubmitButton = styled.button`
 const SuccessMessage = styled.div`
   background-color: ${({ theme }) => theme.colors.success}20;
   color: ${({ theme }) => theme.colors.success};
+  padding: ${({ theme }) => theme.spacing.md};
+  border-radius: ${({ theme }) => theme.borderRadius.medium};
+  margin-top: ${({ theme }) => theme.spacing.md};
+  text-align: center;
+`;
+
+const ErrorMessage = styled.div`
+  background-color: ${({ theme }) => theme.colors.error}20;
+  color: ${({ theme }) => theme.colors.error};
   padding: ${({ theme }) => theme.spacing.md};
   border-radius: ${({ theme }) => theme.borderRadius.medium};
   margin-top: ${({ theme }) => theme.spacing.md};
@@ -121,6 +132,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ className, title, subtitle, o
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -148,27 +160,33 @@ const ContactForm: React.FC<ContactFormProps> = ({ className, title, subtitle, o
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitError(null);
 
     try {
-      // Submit form data
+      // Send form data to the specified email
+      const result = await sendFormDataToEmail(formData);
+      
+      // Call the onSubmit prop if provided
       if (onSubmit) {
         onSubmit(formData);
       }
       
-      // For demo, just wait a bit and show success
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setIsSubmitted(true);
-      setFormData({
-        firstName: '',
-        lastName: '',
-        phone: '',
-        email: '',
-        zipCode: '',
-        interests: [],
-      });
+      if (result.success) {
+        setIsSubmitted(true);
+        setFormData({
+          firstName: '',
+          lastName: '',
+          phone: '',
+          email: '',
+          zipCode: '',
+          interests: [],
+        });
+      } else {
+        setSubmitError(result.message);
+      }
     } catch (error) {
       console.error('Error submitting form:', error);
+      setSubmitError('An unexpected error occurred. Please try again later.');
     } finally {
       setIsSubmitting(false);
     }
@@ -257,7 +275,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ className, title, subtitle, o
                   checked={formData.interests.includes('solar-batteries')}
                   onChange={handleChange}
                 />
-                Solar/Batteries
+                <span style={{ color: 'inherit' }}>Solar/Batteries</span>
               </CheckboxLabel>
               
               <CheckboxLabel>
@@ -268,7 +286,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ className, title, subtitle, o
                   checked={formData.interests.includes('adding-batteries')}
                   onChange={handleChange}
                 />
-                Adding Batteries
+                <span style={{ color: 'inherit' }}>Adding Batteries</span>
               </CheckboxLabel>
               
               <CheckboxLabel>
@@ -279,7 +297,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ className, title, subtitle, o
                   checked={formData.interests.includes('true-up')}
                   onChange={handleChange}
                 />
-                True-Up
+                <span style={{ color: 'inherit' }}>True-Up</span>
               </CheckboxLabel>
             </CheckboxContainer>
           </FormGroup>
@@ -292,6 +310,12 @@ const ContactForm: React.FC<ContactFormProps> = ({ className, title, subtitle, o
             <SuccessMessage>
               Thank you for your message! We'll get back to you soon.
             </SuccessMessage>
+          )}
+          
+          {submitError && (
+            <ErrorMessage>
+              {submitError}
+            </ErrorMessage>
           )}
         </form>
       </FormContainer>

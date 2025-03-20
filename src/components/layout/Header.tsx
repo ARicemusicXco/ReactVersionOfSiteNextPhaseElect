@@ -313,21 +313,6 @@ const MobileNavSection = styled.div`
   width: 100%;
 `;
 
-const MobileNavHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: ${({ theme }) => theme.colors.text};
-  font-weight: 500;
-  padding: ${({ theme }) => theme.spacing.md};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.lightGray};
-  cursor: pointer;
-
-  &:hover {
-    color: ${({ theme }) => theme.colors.primary};
-  }
-`;
-
 const MobileNavSubMenu = styled.div<{ $isOpen: boolean }>`
   display: ${({ $isOpen }) => ($isOpen ? 'flex' : 'none')};
   flex-direction: column;
@@ -412,7 +397,7 @@ const Header: React.FC<HeaderProps> = ({ isTransparent = false }) => {
   const handleServicesMouseLeave = () => {
     servicesTimeoutRef.current = setTimeout(() => {
       setServicesOpen(false);
-    }, 300); // 300ms delay before closing
+    }, 200); // 200ms delay before closing (reduced from 300ms)
   };
   
   // Handle resources dropdown
@@ -427,7 +412,7 @@ const Header: React.FC<HeaderProps> = ({ isTransparent = false }) => {
   const handleResourcesMouseLeave = () => {
     resourcesTimeoutRef.current = setTimeout(() => {
       setResourcesOpen(false);
-    }, 300); // 300ms delay before closing
+    }, 200); // 200ms delay before closing (reduced from 300ms)
   };
   
   // Handle about dropdown
@@ -442,7 +427,7 @@ const Header: React.FC<HeaderProps> = ({ isTransparent = false }) => {
   const handleAboutMouseLeave = () => {
     aboutTimeoutRef.current = setTimeout(() => {
       setAboutOpen(false);
-    }, 300); // 300ms delay before closing
+    }, 200); // 200ms delay before closing (reduced from 300ms)
   };
   
   // Handle click outside to close dropdowns
@@ -519,7 +504,7 @@ const Header: React.FC<HeaderProps> = ({ isTransparent = false }) => {
           >
             <NavLink 
               isButton={true}
-              onClick={(e: React.MouseEvent) => setServicesOpen(!servicesOpen)}
+              onClick={() => setServicesOpen(!servicesOpen)}
               onKeyDown={(e: React.KeyboardEvent) => handleKeyDown(e, setServicesOpen, servicesOpen)}
               tabIndex={0}
               aria-haspopup="true"
@@ -612,7 +597,7 @@ const Header: React.FC<HeaderProps> = ({ isTransparent = false }) => {
           >
             <NavLink 
               isButton={true}
-              onClick={(e: React.MouseEvent) => setResourcesOpen(!resourcesOpen)}
+              onClick={() => setResourcesOpen(!resourcesOpen)}
               onKeyDown={(e: React.KeyboardEvent) => handleKeyDown(e, setResourcesOpen, resourcesOpen)}
               tabIndex={0}
               aria-haspopup="true"
@@ -643,7 +628,7 @@ const Header: React.FC<HeaderProps> = ({ isTransparent = false }) => {
           >
             <NavLink 
               isButton={true}
-              onClick={(e: React.MouseEvent) => setAboutOpen(!aboutOpen)}
+              onClick={() => setAboutOpen(!aboutOpen)}
               onKeyDown={(e: React.KeyboardEvent) => handleKeyDown(e, setAboutOpen, aboutOpen)}
               tabIndex={0}
               aria-haspopup="true"

@@ -26,7 +26,7 @@ const SectionTitle = styled.h2`
 `;
 
 const Text = styled.p`
-  color: ${({ theme }) => theme.colors.textLight};
+  color: ${({ theme }) => theme.colors.text};
   line-height: 1.8;
   margin-bottom: ${({ theme }) => theme.spacing.md};
   font-size: 1.1rem;
@@ -70,71 +70,6 @@ const BenefitTitle = styled.h3`
   color: ${({ theme }) => theme.colors.text};
 `;
 
-const JobList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.lg};
-  margin-top: ${({ theme }) => theme.spacing.xl};
-`;
-
-const JobCard = styled.div`
-  background: white;
-  border-radius: ${({ theme }) => theme.borderRadius.medium};
-  padding: ${({ theme }) => theme.spacing.xl};
-  box-shadow: ${({ theme }) => theme.shadows.medium};
-`;
-
-const JobHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    flex-direction: column;
-    gap: ${({ theme }) => theme.spacing.md};
-  }
-`;
-
-const JobTitle = styled.h3`
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: ${({ theme }) => theme.colors.text};
-`;
-
-const JobMeta = styled.div`
-  display: flex;
-  gap: ${({ theme }) => theme.spacing.md};
-  color: ${({ theme }) => theme.colors.textLight};
-  font-size: 0.9rem;
-`;
-
-const JobTag = styled.span`
-  background-color: ${({ theme }) => theme.colors.lightGray};
-  padding: ${({ theme }) => `${theme.spacing.xs} ${theme.spacing.sm}`};
-  border-radius: ${({ theme }) => theme.borderRadius.small};
-`;
-
-const JobDescription = styled.div`
-  color: ${({ theme }) => theme.colors.textLight};
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
-`;
-
-const ApplyButton = styled.button`
-  background-color: ${({ theme }) => theme.colors.primary};
-  color: white;
-  padding: ${({ theme }) => `${theme.spacing.md} ${theme.spacing.xl}`};
-  border: none;
-  border-radius: ${({ theme }) => theme.borderRadius.small};
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.primaryDark};
-  }
-`;
-
 const benefits = [
   {
     icon: "💰",
@@ -168,45 +103,6 @@ const benefits = [
   }
 ];
 
-const jobs = [
-  {
-    title: "Solar Installation Technician",
-    location: "Bakersfield, CA",
-    type: "Full-time",
-    description: "We're seeking experienced solar installation technicians to join our growing team. The ideal candidate will have experience in residential and commercial solar installations, strong attention to detail, and excellent problem-solving skills.",
-    requirements: [
-      "2+ years of solar installation experience",
-      "Valid driver's license",
-      "Ability to work at heights",
-      "OSHA certification preferred"
-    ]
-  },
-  {
-    title: "Licensed Electrician",
-    location: "Bakersfield, CA",
-    type: "Full-time",
-    description: "Looking for licensed electricians to handle residential and commercial electrical projects. Must have strong technical skills and experience with both traditional electrical work and renewable energy systems.",
-    requirements: [
-      "Valid California Electrical License",
-      "5+ years of experience",
-      "Experience with solar installations a plus",
-      "Strong communication skills"
-    ]
-  },
-  {
-    title: "Project Manager",
-    location: "Bakersfield, CA",
-    type: "Full-time",
-    description: "Seeking an experienced project manager to oversee solar and electrical projects from start to finish. Will be responsible for coordinating with clients, team members, and suppliers to ensure successful project completion.",
-    requirements: [
-      "5+ years of project management experience",
-      "Experience in solar or electrical industry",
-      "Strong organizational and leadership skills",
-      "PMP certification preferred"
-    ]
-  }
-];
-
 const Careers: React.FC = () => {
   return (
     <Container>
@@ -235,33 +131,9 @@ const Careers: React.FC = () => {
 
       <Section>
         <SectionTitle>Open Positions</SectionTitle>
-        <JobList>
-          {jobs.map((job) => (
-            <JobCard key={job.title}>
-              <JobHeader>
-                <div>
-                  <JobTitle>{job.title}</JobTitle>
-                  <JobMeta>
-                    <JobTag>{job.location}</JobTag>
-                    <JobTag>{job.type}</JobTag>
-                  </JobMeta>
-                </div>
-                <ApplyButton onClick={() => window.location.href = '/contact'}>
-                  Apply Now
-                </ApplyButton>
-              </JobHeader>
-              <JobDescription>
-                <Text>{job.description}</Text>
-                <Text>Requirements:</Text>
-                <ul>
-                  {job.requirements.map((req, index) => (
-                    <li key={index}>{req}</li>
-                  ))}
-                </ul>
-              </JobDescription>
-            </JobCard>
-          ))}
-        </JobList>
+        <Text>
+          No positions are currently available at this time. Please check back later for future opportunities or contact us to submit your resume for consideration.
+        </Text>
       </Section>
 
       <Section>

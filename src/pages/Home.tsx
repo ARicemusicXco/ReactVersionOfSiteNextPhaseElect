@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import IntegratedHeader from '../components/home/IntegratedHeader';
+import ContactForm from '../components/forms/ContactForm';
+import { sendFormDataToEmail, FormData as EmailFormData } from '../services/emailService';
 
 const HomeContainer = styled.div`
   display: flex;
@@ -179,7 +181,8 @@ const ServiceLink = styled(Link)`
   font-size: ${({ theme }) => theme.fontSizes.medium};
   
   &:hover {
-    background-color: ${({ theme }) => theme.colors.secondary};
+    background-color: #c01820;
+    color: white;
     text-decoration: none;
   }
   
@@ -196,7 +199,7 @@ const ServiceLink = styled(Link)`
 
 const ValuesSection = styled(Section)`
   background-color: #000000;
-  text-align: left;
+  text-align: center;
   color: white;
   padding: ${({ theme }) => `${theme.spacing.xl} ${theme.spacing.xl}`};
 `;
@@ -207,7 +210,7 @@ const ValuesSectionTitle = styled.h2`
   margin-bottom: ${({ theme }) => theme.spacing.md};
   font-weight: 700;
   position: relative;
-  text-align: left;
+  text-align: center;
 `;
 
 const ValuesText = styled.p`
@@ -216,6 +219,8 @@ const ValuesText = styled.p`
   max-width: 800px;
   line-height: 1.6;
   margin-bottom: ${({ theme }) => theme.spacing.lg};
+  margin-left: auto;
+  margin-right: auto;
 `;
 
 const HighlightedText = styled.span`
@@ -243,7 +248,7 @@ const LearnMoreButton = styled(Link)`
 const ContactFormSection = styled(Section)`
   background-color: #000000;
   color: white;
-  text-align: left;
+  text-align: center;
   padding: ${({ theme }) => `${theme.spacing.xl} ${theme.spacing.xl}`};
 `;
 
@@ -253,109 +258,13 @@ const QuoteTitle = styled.h2`
   margin-bottom: ${({ theme }) => theme.spacing.xl};
   font-weight: 700;
   position: relative;
-  text-align: left;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.md};
-  max-width: 600px;
-  margin: 0 auto;
-  background-color: white;
-  padding: ${({ theme }) => theme.spacing.xl};
-  border-radius: ${({ theme }) => theme.borderRadius.small};
-  box-shadow: ${({ theme }) => theme.shadows.medium};
-`;
-
-const FormRow = styled.div`
-  display: flex;
-  gap: ${({ theme }) => theme.spacing.md};
-  
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    flex-direction: column;
-  }
-`;
-
-const FormGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.xs};
-  flex: 1;
-`;
-
-const Label = styled.label`
-  font-weight: 500;
-  color: ${({ theme }) => theme.colors.text};
-`;
-
-const Input = styled.input`
-  padding: ${({ theme }) => theme.spacing.sm};
-  border: 1px solid ${({ theme }) => theme.colors.lightGray};
-  border-radius: ${({ theme }) => theme.borderRadius.small};
-  font-size: ${({ theme }) => theme.fontSizes.medium};
-  font-family: ${({ theme }) => theme.fonts.body};
-
-  &:focus {
-    outline: none;
-    border-color: ${({ theme }) => theme.colors.primary};
-    box-shadow: 0 0 0 2px ${({ theme }) => theme.colors.primary}20;
-  }
-`;
-
-const CheckboxGroup = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.sm};
-  margin-top: ${({ theme }) => theme.spacing.sm};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
-`;
-
-const CheckboxLabel = styled.label`
-  display: flex;
-  align-items: center;
-  gap: ${({ theme }) => theme.spacing.sm};
-  cursor: pointer;
-  color: #333;
-  font-size: 1rem;
-`;
-
-const Checkbox = styled.input`
-  cursor: pointer;
-  width: 18px;
-  height: 18px;
-  margin-right: ${({ theme }) => theme.spacing.xs};
-`;
-
-const SubmitButton = styled(Button)`
-  align-self: center;
-  margin-top: ${({ theme }) => theme.spacing.md};
-  background-color: ${({ theme }) => theme.colors.primary};
-  text-transform: uppercase;
-  font-size: 0.9rem;
-  letter-spacing: 0.5px;
-  padding: ${({ theme }) => `${theme.spacing.xs} ${theme.spacing.xl}`};
-  width: auto;
-  min-width: 120px;
-  
-  &:hover {
-    background-color: #c01820;
-  }
-`;
-
-const RequiredFieldNote = styled.p`
-  font-size: 0.8rem;
-  color: #666;
-  margin-bottom: ${({ theme }) => theme.spacing.md};
+  text-align: center;
 `;
 
 const Home: React.FC = () => {
   const [visibleCards, setVisibleCards] = useState<boolean[]>([false, false, false, false, false]);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [formSubmitting, setFormSubmitting] = useState(false);
-  const [formSubmitted, setFormSubmitted] = useState(false);
-  const formRef = useRef<HTMLFormElement>(null);
-
+  
   useEffect(() => {
     const observerOptions = {
       root: null, // use viewport
@@ -402,44 +311,12 @@ const Home: React.FC = () => {
     cardRefs.current[index] = element;
   };
 
-  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setFormSubmitting(true);
-    
-    const form = e.currentTarget;
-    const formData = new FormData(form);
-    const formValues: Record<string, string> = {};
-    
-    // Convert FormData to object
-    formData.forEach((value, key) => {
-      if (typeof value === 'string') {
-        formValues[key] = value;
-      }
-    });
-    
-    // Get selected interests
-    const interests = formData.getAll('interests');
-    formValues.interests = interests.join(', ');
-    
+  const handleFormSubmit = async (formData: EmailFormData) => {
     try {
-      // In a real implementation, you would send this data to a server endpoint
-      // that would handle the email sending to arice@xco.energy
-      console.log('Form data to be sent to arice@xco.energy:', formValues);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Safely reset the form
-      if (formRef.current) {
-        formRef.current.reset();
-      }
-      
-      setFormSubmitted(true);
-      setTimeout(() => setFormSubmitted(false), 5000);
+      const result = await sendFormDataToEmail(formData);
+      console.log(result.message);
     } catch (error) {
-      console.error('Error submitting form:', error);
-    } finally {
-      setFormSubmitting(false);
+      console.error('Error sending form data:', error);
     }
   };
 
@@ -529,59 +406,9 @@ const Home: React.FC = () => {
 
       <ContactFormSection>
         <QuoteTitle>Get a No Obligation Quote</QuoteTitle>
-        <Form ref={formRef} onSubmit={handleFormSubmit}>
-          <RequiredFieldNote>"*" indicates required fields</RequiredFieldNote>
-          <FormRow>
-            <FormGroup>
-              <Label htmlFor="firstName">First Name*</Label>
-              <Input type="text" id="firstName" name="firstName" required />
-            </FormGroup>
-            <FormGroup>
-              <Label htmlFor="lastName">Last Name*</Label>
-              <Input type="text" id="lastName" name="lastName" required />
-            </FormGroup>
-          </FormRow>
-          <FormRow>
-            <FormGroup>
-              <Label htmlFor="phone">Phone*</Label>
-              <Input type="tel" id="phone" name="phone" required />
-            </FormGroup>
-            <FormGroup>
-              <Label htmlFor="email">Email*</Label>
-              <Input type="email" id="email" name="email" required />
-            </FormGroup>
-          </FormRow>
-          <FormGroup>
-            <Label htmlFor="zipCode">Zip Code</Label>
-            <Input type="text" id="zipCode" name="zipCode" />
-          </FormGroup>
-          <FormGroup>
-            <Label>I'm Interested In:</Label>
-            <CheckboxGroup>
-              <CheckboxLabel>
-                <Checkbox type="checkbox" name="interests" value="solar-batteries" />
-                Solar/Batteries
-              </CheckboxLabel>
-              <CheckboxLabel>
-                <Checkbox type="checkbox" name="interests" value="adding-batteries" />
-                Adding Batteries
-              </CheckboxLabel>
-              <CheckboxLabel>
-                <Checkbox type="checkbox" name="interests" value="true-up" />
-                True-Up
-              </CheckboxLabel>
-            </CheckboxGroup>
-          </FormGroup>
-          <SubmitButton type="submit" disabled={formSubmitting}>
-            {formSubmitting ? 'Submitting...' : formSubmitted ? 'Submitted!' : 'SUBMIT'}
-          </SubmitButton>
-          {formSubmitted && (
-            <p style={{ color: 'green', marginTop: '1rem', textAlign: 'center' }}>
-              Thank you for your submission! We'll be in touch soon.
-            </p>
-          )}
-          <input type="hidden" name="recipient" value="arice@xco.energy" />
-        </Form>
+        <ContactForm 
+          onSubmit={handleFormSubmit}
+        />
       </ContactFormSection>
     </HomeContainer>
   );
